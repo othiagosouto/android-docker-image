@@ -13,12 +13,13 @@ ENV ANDROID_SDK_ROOT sdk
 ENV PATH "$PATH:${ANDROID_SDK_ROOT}"
 ENV PATH "$PATH:${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin"
 ENV PATH "$PATH:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin"
+ENV PATH "$PATH:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin"
+ENV PATH "$PATH:${ANDROID_SDK_ROOT}/platform-tools"
 
 RUN echo y | sdkmanager "platforms;android-30" >/dev/null
 RUN echo y | sdkmanager "platform-tools" >/dev/null
+RUN echo y | sdkmanager "emulator" >/dev/null
 RUN echo y | sdkmanager "build-tools;30.0.0" >/dev/null
-
-RUN yes | sdkmanager --licenses
 
 # Setup Gradle
 RUN wget --quiet --output-document=gradle.zip https://services.gradle.org/distributions/gradle-6.4.1-bin.zip
@@ -27,6 +28,11 @@ RUN rm gradle.zip
 ENV GRADLE_HOME  gradle-6.4.1
 ENV PATH "$PATH:${GRADLE_HOME}/bin"
 
-## Setup Emulator
-# RUN sdkmanager "system-images;android-29;google_apis;x86"
-# RUN avdmanager create avd -n test -k "system-images;android-29;google_apis;x86"
+# ## Create Emulator Emulator
+# RUN sdkmanager "system-images;android-27;google_apis;x86"
+# RUN echo no | avdmanager create avd --force -n "DEVICE_API_27" -k "system-images;android-27;google_apis;x86" -d 17
+# RUN echo no
+
+# ## Run Emulator
+# RUN sdk/emulator -avd "DEVICE_API_27" -selinux permissive -no-audio -skin 1080x1920
+# RUN adb shell wm density 420
